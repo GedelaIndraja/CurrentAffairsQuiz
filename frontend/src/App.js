@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function App() {
-
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
@@ -10,17 +9,19 @@ function App() {
   }, []);
 
   const fetchQuestions = async () => {
+    try {
+      const res = await axios.get(
+        "https://currentaffairsquiz.onrender.com/api/questions"
+      );
 
-    const res = await axios.get(
-      "http://localhost:5000/api/questions"
-    );
-
-    setQuestions(res.data);
+      setQuestions(res.data);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    }
   };
 
   return (
     <div style={{ padding: 20 }}>
-
       <h1>Current Affairs Quiz</h1>
 
       {questions.map((q, index) => (
@@ -30,13 +31,11 @@ function App() {
           answer={q.answer}
         />
       ))}
-
     </div>
   );
 }
 
 function QuestionCard({ question, answer }) {
-
   const [show, setShow] = useState(false);
 
   return (
@@ -48,15 +47,10 @@ function QuestionCard({ question, answer }) {
         borderRadius: 10
       }}
     >
-
       <h3>{question}</h3>
 
       <button onClick={() => setShow(!show)}>
-
-        {show
-          ? "Hide Answer"
-          : "Show Answer"}
-
+        {show ? "Hide Answer" : "Show Answer"}
       </button>
 
       {show && (
@@ -64,7 +58,6 @@ function QuestionCard({ question, answer }) {
           {answer}
         </p>
       )}
-
     </div>
   );
 }
